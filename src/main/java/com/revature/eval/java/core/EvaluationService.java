@@ -852,9 +852,71 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
-	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+	public int solveWordProblem(String string) { // Assumes sentence structure such as stated above.
+		int firstNum = 0;
+		int secondNum = 0;
+		if (string.contains("?")) {
+			string = string.substring(0, string.length() - 1);
+		}
+		String[] phrase = string.split(" ");
+
+		int digit = 0;
+		for (int j = phrase[2].length() - 1; j >= 0; j--) {
+			if (phrase[2].charAt(j) == '-') {
+				firstNum *= -1;
+			} else {
+				firstNum += (Character.getNumericValue(phrase[2].charAt(j)) * (int) (Math.pow(10, digit)));
+				digit++;
+			}
+		}
+		digit = 0;
+
+		switch (phrase[3]) {
+		case "plus":
+			for (int j = phrase[4].length() - 1; j >= 0; j--) {
+				if (phrase[4].charAt(j) == '-') {
+					secondNum *= -1;
+				} else {
+					secondNum += (Character.getNumericValue(phrase[4].charAt(j)) * (int) (Math.pow(10, digit)));
+					digit++;
+				}
+			}
+			return firstNum + secondNum;
+		case "minus":
+			for (int j = phrase[4].length() - 1; j >= 0; j--) {
+				if (phrase[4].charAt(j) == '-') {
+					secondNum *= -1;
+				} else {
+					secondNum += (Character.getNumericValue(phrase[4].charAt(j)) * (int) (Math.pow(10, digit)));
+					digit++;
+				}
+			}
+			return firstNum - secondNum;
+		case "multiplied":
+			for (int j = phrase[5].length() - 1; j >= 0; j--) {
+				if (phrase[5].charAt(j) == '-') {
+					secondNum *= -1;
+				} else {
+					secondNum += (Character.getNumericValue(phrase[5].charAt(j)) * (int) (Math.pow(10, digit)));
+					digit++;
+				}
+			}
+			return firstNum * secondNum;
+		case "divided":
+			for (int j = phrase[5].length() - 1; j >= 0; j--) {
+				if (phrase[5].charAt(j) == '-') {
+					secondNum *= -1;
+				} else {
+					secondNum += (Character.getNumericValue(phrase[5].charAt(j)) * (int) (Math.pow(10, digit)));
+					digit++;
+				}
+			}
+			return firstNum / secondNum;
+		default:
+			System.out.println("Operation not recognized, please check spelling and sentence phrasing.");
+			System.out.println("Example of a valid question: 'What is 1 plus -2?'");
+			throw new IllegalArgumentException();
+		}
 	}
 
 }
