@@ -800,8 +800,29 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isLuhnValid(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		string = string.replaceAll(" ", "");
+		if (string.matches("[^0-9]")) {
+			return false;
+		} else {
+			int sum = 0;
+			int number = 0;
+			for (int i = string.length() - 1; i >= 0; i--) {
+				number = Character.getNumericValue(string.charAt(i));
+				if ((string.length() - i) % 2 == 0) { // i is initially 1 less than the length of the string
+					number *= 2;
+					if (number > 9) {
+						number -= 9;
+					}
+				}
+				System.out.println(number);
+				sum += number;
+			}
+			if (sum % 10 == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 
 	/**
