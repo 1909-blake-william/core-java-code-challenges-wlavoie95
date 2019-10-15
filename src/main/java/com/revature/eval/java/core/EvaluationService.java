@@ -691,8 +691,21 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		if (string != null) {
+			string = string.toLowerCase();
+			string = string.replaceAll("[^a-z]", "");
+			Set<Character> charSet = new HashSet<>();
+			for (int i = 0; i < string.length(); i++) {
+				charSet.add(string.charAt(i));
+			}
+			if (charSet.size() == 26) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -733,16 +746,16 @@ public class EvaluationService {
 			}
 		} else {
 			Set<Integer> multSet = new HashSet<>();
-			for(int j = 0; j < set.length; j++) {
+			for (int j = 0; j < set.length; j++) {
 				multiplier = 1;
 				currentNumber = set[j];
-				while(currentNumber < i) {
+				while (currentNumber < i) {
 					multSet.add(currentNumber);
 					multiplier++;
 					currentNumber = set[j] * multiplier;
 				}
 			}
-			for(int multiple : multSet) {
+			for (int multiple : multSet) {
 				sumOfMult += multiple;
 			}
 		}
