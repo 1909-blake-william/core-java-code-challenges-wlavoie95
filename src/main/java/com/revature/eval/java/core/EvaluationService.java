@@ -3,8 +3,10 @@ package com.revature.eval.java.core;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class EvaluationService {
 
@@ -720,8 +722,32 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		int sumOfMult = 0;
+		int multiplier;
+		int currentNumber;
+		if (set.length == 1) {
+			currentNumber = set[0];
+			while (currentNumber < i) {
+				sumOfMult += currentNumber;
+				currentNumber += set[0];
+			}
+		} else {
+			Set<Integer> multSet = new HashSet<>();
+			for(int j = 0; j < set.length; j++) {
+				multiplier = 1;
+				currentNumber = set[j];
+				while(currentNumber < i) {
+					multSet.add(currentNumber);
+					multiplier++;
+					currentNumber = set[j] * multiplier;
+				}
+			}
+			for(int multiple : multSet) {
+				sumOfMult += multiple;
+			}
+		}
+		return sumOfMult;
+
 	}
 
 	/**
