@@ -38,10 +38,7 @@ public class EvaluationService {
 	 */
 	public String acronym(String phrase) {
 		String result = phrase;
-		if (result.contains("-")) {
-			result = result.replace("-", " ");
-		}
-
+		result = result.replaceAll("[^a-zA-Z| ]", " ");
 		String[] words = result.split(" ");
 		result = "";
 		for (int i = 0; i < words.length; i++) {
@@ -225,13 +222,15 @@ public class EvaluationService {
 		if (number.length() == 11) {
 			if (number.substring(0, 1).equals("1")) {
 				number = number.substring(1);
+				return number.substring(1);
+			} else {
+				throw new IllegalArgumentException();
 			}
-		} else if (number.length() < 10) {
-			throw new IllegalArgumentException();
-		} else if (number.length() > 11) {
+		} else if (number.length() == 10) {
+			return number;
+		} else {
 			throw new IllegalArgumentException();
 		}
-		return number;
 	}
 
 	/**
@@ -722,8 +721,7 @@ public class EvaluationService {
 	public Temporal getGigasecondDate(Temporal given) { // will require use of LocalDateTime
 		if (given.isSupported(ChronoUnit.SECONDS)) {
 			return given.plus(1000000000l, ChronoUnit.SECONDS);
-		}
-		else {
+		} else {
 			if (given instanceof LocalDate) {
 				LocalDate local = (LocalDate) given;
 				return local.atStartOfDay().plusSeconds(1000000000l);
