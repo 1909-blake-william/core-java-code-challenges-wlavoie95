@@ -1,7 +1,6 @@
 package com.revature.eval.java.core;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
@@ -42,7 +41,9 @@ public class EvaluationService {
 		String[] words = result.split(" ");
 		result = "";
 		for (int i = 0; i < words.length; i++) {
-			result += words[i].charAt(0);
+			if (!words[i].equals("")) {
+				result += words[i].charAt(0);
+			}
 		}
 		return result.toUpperCase();
 	}
@@ -303,9 +304,32 @@ public class EvaluationService {
 	static class BinarySearch<T extends Comparable<T>> {
 		private List<T> sortedList;
 
-		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
-			return 0;
+		public int indexOf(T t) { // Using -1 as an indicator for t not being found in the list
+			List<T> searchList = getSortedList();
+			int min = 0;
+			int max = searchList.size();
+			int index = (max + min) / 2;
+			boolean isMatch = false;
+			while (!isMatch) {
+				if (t.compareTo(searchList.get(index)) == 0) { // match case
+					isMatch = true;
+				} else if (t.compareTo(searchList.get(index)) < 0) { // less than case
+					if (min == max) {
+						return -1; // Not found in the list
+					} else {
+						max = index - 1;
+						index = (max + min) / 2;
+					}
+				} else { // greater than case
+					if (min == max) {
+						return -1; // Not found in the list
+					} else {
+						min = index + 1;
+						index = (max + min) / 2;
+					}
+				}
+			}
+			return index;
 		}
 
 		public BinarySearch(List<T> sortedList) {
@@ -340,42 +364,43 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
-	public String toPigLatin(String string) {
-		boolean isVowelSound = false;
+	public String toPigLatin(String string) { // Will be rewritten.
+		boolean isVowel = false;
 		String result = "";
 		String[] phrase = string.split(" ");
 		StringBuilder s = new StringBuilder();
-		for (int i = 0; i < phrase.length; i++) {
+		for (int i = 0; i < phrase.length; i++) { // First checks if the starting letter is a vowel
 			s = new StringBuilder(phrase[i]);
-			if (s.substring(0, 1).matches("[aAeEiIoOuU]")) {
-				isVowelSound = true;
-			} else if (phrase[i].contains("honest") || phrase[i].contains("herb")) {
-				isVowelSound = true;
+			if (s.substring(0, 1).matches("[aAeEiIoOuU]")) { // If the first letter is any vowel
+				isVowel = true;
+			} else if (phrase[i].contains("honest") || phrase[i].contains("herb")) { // edge case, silent h
+				isVowel = true;
 			} else {
-				isVowelSound = false;
+				isVowel = false;
 			}
-			if (isVowelSound) {
+			if (isVowel) {
 				s.append("ay");
-			} else {
+				result = s.toString();
+			} else { // looks for edge cases, then looks for vowels or the letter y
 				int numCharsToMove = 0;
-				boolean foundVowel = false;
+				boolean foundVowelSound = false;
 				if (s.substring(numCharsToMove, numCharsToMove + 1).matches("[yY]")) {
 					numCharsToMove = 1;
-					foundVowel = true;
+					foundVowelSound = true;
 				} else if (s.substring(numCharsToMove, numCharsToMove + 2).equals("qu")) {
 					numCharsToMove = 2;
-					foundVowel = true;
+					foundVowelSound = true;
 				} else {
-					while (!foundVowel) {
+					while (!foundVowelSound) {
 						if (s.substring(numCharsToMove, numCharsToMove + 1).matches("[aAeEiIoOuUyY]")) {
-							foundVowel = true;
+							foundVowelSound = true;
 						} else {
 							numCharsToMove++;
 						}
 					}
 				}
-				String charsToMove = s.substring(0, numCharsToMove);
-				s.delete(0, numCharsToMove);
+				String charsToMove = s.substring(0, numCharsToMove); // Moves letters to the back, based on
+				s.delete(0, numCharsToMove);						// how many letters need to be moved
 				s.append(charsToMove + "ay");
 				if (i == 0) {
 					if (i == phrase.length - 1) {
@@ -477,18 +502,45 @@ public class EvaluationService {
 	 * gur ynml qbt. ROT13 Gur dhvpx oebja sbk whzcf bire gur ynml qbt. gives The
 	 * quick brown fox jumps over the lazy dog.
 	 */
-	static class RotationalCipher { // should use a Map for this.
+	static class RotationalCipher {
 		private int key;
-		private Map<Integer, String> cipher = new HashMap<>();
 
 		public RotationalCipher(int key) {
 			super();
 			this.key = key;
 		}
 
-		public String rotate(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+		public String rotate(String string) { // assumes input is not null
+			if (key == 0) {
+				return string;
+			} else {
+				final int _ALPHABETLENGTH_ = 26;
+				StringBuilder result = new StringBuilder("");
+				for (int i = 0; i < string.length(); i++) {
+					char c = (string.charAt(i));
+					if (c != ' ') {
+						if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) { // Rotates only if the char
+							if (Character.isUpperCase(c)) { // is a letter
+								c = (char) (c + key);
+								if (c > 'Z') {
+									c -= _ALPHABETLENGTH_;
+								}
+							} else {
+								c = (char) (c + key);
+								if (c > 'z') {
+									c -= _ALPHABETLENGTH_;
+								}
+							}
+						}
+					}
+					result = result.append(Character.toString(c));
+				}
+				return result.toString();
+			}
+			// compare lowercase to z, and if > z then -26
+			// for uppercase, > Z, then -26
+			// skip spaces
+			// DO NOT CHANGE CASE
 		}
 
 	}
@@ -718,9 +770,9 @@ public class EvaluationService {
 	 * @param given
 	 * @return
 	 */
-	public Temporal getGigasecondDate(Temporal given) { // will require use of LocalDateTime
-		if (given.isSupported(ChronoUnit.SECONDS)) {
-			return given.plus(1000000000l, ChronoUnit.SECONDS);
+	public Temporal getGigasecondDate(Temporal given) {
+		if (given.isSupported(ChronoUnit.SECONDS)) { // If the provided Temporal supports seconds
+			return given.plus(1000000000l, ChronoUnit.SECONDS); // Return the Temporal with 1 gigasecond added
 		} else {
 			if (given instanceof LocalDate) {
 				LocalDate local = (LocalDate) given;
